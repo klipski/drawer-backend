@@ -1,7 +1,10 @@
-# django-drf-boilerplate
+# drawer-backend
 
 ## Description
-This is a simple template repository for new projects.
+This is a repository that contains the source code for the application backend.
+
+## Setup
+Create `.env` file in `app` directory from template file `env.template`.
 
 ## Installation
 ```
