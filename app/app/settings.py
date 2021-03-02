@@ -53,6 +53,9 @@ INSTALLED_APPS = [
     'django_extensions',
     'django_celery_beat',
     'drf_yasg',
+    'taggit',
+
+    'drawer',
 ]
 
 MIDDLEWARE = [
@@ -182,3 +185,5 @@ SHELL_PLUS_PYGMENTS_FORMATTER_KWARGS = {}
 # Swagger and redoc
 SWAGGER_SETTINGS = {}
 REDOC_SETTINGS = {}
+
+TAGGIT_CASE_INSENSITIVE = True
