@@ -40,9 +40,14 @@ urlpatterns = [
     url(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     url(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     url(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
-    # djoser
-    url(r'^auth/', include('djoser.urls')),
-    url(r'^auth/', include('djoser.urls.jwt')),
     # drf
     path('api-auth/', include('rest_framework.urls')),
+    path('api/v1/', include([
+        # djoser
+        url(r'^auth/', include('djoser.urls')),
+        url(r'^auth/', include('djoser.urls.jwt')),
+        # apps
+        path('drawer/', include('drawer.urls')),
+    ])),
+
 ]

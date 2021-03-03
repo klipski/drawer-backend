@@ -187,3 +187,9 @@ SWAGGER_SETTINGS = {}
 REDOC_SETTINGS = {}
 
 TAGGIT_CASE_INSENSITIVE = True
+
+if DEBUG:
+    REST_FRAMEWORK['DEFAULT_AUTHENTICATION_CLASSES'] = (
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
