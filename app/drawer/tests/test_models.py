@@ -19,9 +19,9 @@ class DrawerTestCase(TestCase):
 class BookmarkTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
-        cls.user1 = User.objects.create(username='user1', password='top_secret123')
-        Bookmark.objects.create(url='https://www.djangoproject.com/', drawer=cls.user1.drawer)
-        Bookmark.objects.create(url='https://www.django-rest-framework.org/', drawer=cls.user1.drawer)
+        cls.user = User.objects.create(username='user1', password='top_secret123')
+        Bookmark.objects.create(url='https://www.djangoproject.com/', drawer=cls.user.drawer)
+        Bookmark.objects.create(url='https://www.django-rest-framework.org/', drawer=cls.user.drawer)
 
     def test_deleted_at_update_after_changed_deleted_attribute(self):
         bookmark = Bookmark.objects.first()
@@ -31,5 +31,10 @@ class BookmarkTestCase(TestCase):
         bookmark.deleted = True
         bookmark.save()
         bookmark.refresh_from_db()
+
+        self.assertIsNotNone(bookmark.deleted_at)
+
+    def test_deleted_at_update_after_create_bookmark_with_deleted_attribute(self):
+        bookmark = Bookmark.objects.create(url='https://localhost:8080/', drawer=self.user.drawer, deleted=True)
 
         self.assertIsNotNone(bookmark.deleted_at)
