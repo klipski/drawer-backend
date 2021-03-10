@@ -10,10 +10,13 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import os
+from datetime import timedelta
 from pathlib import Path
-import environ
 
+import environ
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+from celery.schedules import crontab
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 env = environ.Env(
@@ -54,6 +57,7 @@ INSTALLED_APPS = [
     'django_celery_beat',
     'drf_yasg',
     'taggit',
+    'django_filters',
 
     'drawer',
 ]
@@ -147,10 +151,13 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
 }
 
 # DRF SIMPLE JWT Configuration Options
 SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'AUTH_HEADER_TYPES': ('JWT',),
 }
 
@@ -165,7 +172,13 @@ CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TRACK_STARTED = True
 CELERY_BEAT_INTERVAL = env.int('CELERY_BEAT_INTERVAL')
 CELERY_TIMEZONE = 'UTC'
-CELERYBEAT_SCHEDULE = {}
+
+CELERY_BEAT_SCHEDULE = {
+    'delete_expired_bookmarks': {
+        'task': 'delete_expired_bookmarks',
+        'schedule': crontab(minute='*/15'),
+    }
+}
 
 # Always use IPython for shell_plus
 SHELL_PLUS = "ipython"
@@ -194,3 +207,24 @@ if DEBUG:
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            'propagate': False,
+        },
+    },
+}

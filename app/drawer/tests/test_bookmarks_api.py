@@ -16,9 +16,9 @@ class TestBookmarksAPI(APITestCase):
     def setUpTestData(cls):
         cls.user1 = User.objects.create(username='user1', password='top_secret123')
         cls.user2 = User.objects.create(username='user2', password='***super_secret***')
-        Bookmark.objects.create(url='https://www.djangoproject.com/', user=cls.user1)
-        Bookmark.objects.create(url='https://www.django-rest-framework.org/', user=cls.user1)
-        Bookmark.objects.create(url='http://localhost:8000/', user=cls.user2)
+        Bookmark.objects.create(url='https://www.djangoproject.com/', drawer=cls.user1.drawer)
+        Bookmark.objects.create(url='https://www.django-rest-framework.org/', drawer=cls.user1.drawer)
+        Bookmark.objects.create(url='http://localhost:8000/', drawer=cls.user2.drawer)
 
     def test_list_by_not_authenticated_user(self):
         res = self.client.get(reverse(f'{BOOKMARKS_API}-list'))
@@ -61,7 +61,7 @@ class TestBookmarksAPI(APITestCase):
         self.client.force_authenticate(self.user1)
 
         res = self.client.get(reverse(f'{BOOKMARKS_API}-list'))
-        serialized = BookmarkSerializer(self.user1.bookmarks, many=True)
+        serialized = BookmarkSerializer(self.user1.drawer.bookmarks, many=True)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data, serialized.data)
@@ -82,7 +82,7 @@ class TestBookmarksAPI(APITestCase):
     def test_retrieve(self):
         self.client.force_authenticate(self.user1)
 
-        bookmark = self.user1.bookmarks.first()
+        bookmark = self.user1.drawer.bookmarks.first()
 
         res = self.client.get(reverse(f'{BOOKMARKS_API}-detail', kwargs={'uid': bookmark.uid}))
         serialized = BookmarkSerializer(bookmark)
@@ -93,7 +93,7 @@ class TestBookmarksAPI(APITestCase):
     def test_update(self):
         self.client.force_authenticate(self.user1)
 
-        bookmark = self.user1.bookmarks.first()
+        bookmark = self.user1.drawer.bookmarks.first()
         payload = {
             'url': 'https://en.wikipedia.org/wiki/Main_Page'
         }
@@ -107,7 +107,7 @@ class TestBookmarksAPI(APITestCase):
     def test_partial_update(self):
         self.client.force_authenticate(self.user1)
 
-        bookmark = self.user1.bookmarks.first()
+        bookmark = self.user1.drawer.bookmarks.first()
         payload = {
             'url': 'https://en.wikipedia.org/wiki/Main_Page'
         }
@@ -121,7 +121,7 @@ class TestBookmarksAPI(APITestCase):
     def test_delete(self):
         self.client.force_authenticate(self.user1)
 
-        bookmark = self.user1.bookmarks.first()
+        bookmark = self.user1.drawer.bookmarks.first()
         res = self.client.delete(reverse(f'{BOOKMARKS_API}-detail', kwargs={'uid': bookmark.uid}))
 
         self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
