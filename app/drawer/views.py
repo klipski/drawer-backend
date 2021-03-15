@@ -11,9 +11,9 @@ class BookmarkViewSet(viewsets.ModelViewSet):
     """
     queryset = Bookmark.objects.all()
     serializer_class = BookmarkSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = [IsAuthenticated]
     lookup_field = 'uid'
-    filterset_fields = ('deleted',)
+    filterset_fields = ['deleted']
 
     def perform_create(self, serializer):
         serializer.save(drawer=self.request.user.drawer)

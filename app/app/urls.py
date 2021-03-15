@@ -42,11 +42,10 @@ urlpatterns = [
     url(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     # drf
     path('api-auth/', include('rest_framework.urls')),
+    # API
     path('api/v1/', include([
-        # djoser
-        url(r'^auth/', include('djoser.urls')),
-        url(r'^auth/', include('djoser.urls.jwt')),
-        # apps
+        url(r'^auth/', include('auth.urls')),
+        # url(r'^auth/', include('djoser.urls.jwt')),
         path('drawer/', include('drawer.urls')),
     ])),
 
