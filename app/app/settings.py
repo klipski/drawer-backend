@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'corsheaders',
 
     'drawer',
+    'auths',
 ]
 
 MIDDLEWARE = [
@@ -149,6 +150,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+AUTH_USER_MODEL = 'auths.User'
+
 # DRF Configuration Options
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -168,6 +171,7 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'AUTH_HEADER_TYPES': ('JWT',),
+    'USER_ID_FIELD': 'email',
 }
 
 # Celery Configuration Options

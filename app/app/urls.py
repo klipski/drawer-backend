@@ -44,8 +44,7 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     # API
     path('api/v1/', include([
-        url(r'^auth/', include('auth.urls')),
-        # url(r'^auth/', include('djoser.urls.jwt')),
+        url(r'^auth/', include('auths.urls')),
         path('drawer/', include('drawer.urls')),
     ])),
 
