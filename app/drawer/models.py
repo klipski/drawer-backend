@@ -11,6 +11,9 @@ class Drawer(models.Model):
     user = models.OneToOneField(User, related_name='drawer', on_delete=models.CASCADE)
     remove_after_days = models.PositiveSmallIntegerField(default=30)
 
+    def __str__(self):
+        return f"{getattr(self.user, 'email', '')} drawer"
+
 
 class Bookmark(models.Model):
     uid = models.UUIDField(default=uuid.uuid4, editable=False)
@@ -21,3 +24,6 @@ class Bookmark(models.Model):
     deleted = models.BooleanField(default=False)
     deleted_at = models.DateTimeField(blank=True, null=True, default=None)
     tags = TaggableManager(blank=True)
+
+    def __str__(self):
+        return self.url

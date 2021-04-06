@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'taggit',
     'django_filters',
     'corsheaders',
+    'taggit_serializer',
 
     'drawer',
     'auths',
